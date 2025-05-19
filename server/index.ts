@@ -57,8 +57,10 @@ export const getLoadContext: HonoServerOptions["getLoadContext"] = (
 
       return auth;
     },
-    setSession: (auth: any) => {
+    setSession: async (auth: any) => {
       session.set(authSessionKey, auth);
+      // When setting session, also commit it to ensure the cookie is set
+      await session.commit();
     },
     destroySession: () => {
       session.unset(authSessionKey);

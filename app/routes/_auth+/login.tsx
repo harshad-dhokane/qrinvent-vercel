@@ -92,11 +92,15 @@ export async function action({ context, request }: ActionFunctionArgs) {
         });
 
         // Set the auth session and redirect to the assets page
-        context.setSession(authSession);
+        // Set the auth session
+        await context.setSession(authSession);
+        
+        // Get organization cookie
+        const orgCookie = await setSelectedOrganizationIdCookie(organizationId);
 
         return redirect(safeRedirect(redirectTo || "/assets"), {
           headers: [
-            setCookie(await setSelectedOrganizationIdCookie(organizationId)),
+            setCookie(orgCookie)
           ],
         });
       }
