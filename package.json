@@ -41,6 +41,7 @@
     "cross-spawn": "~7.0.6"
   },
   "dependencies": {
+    "@vercel/node": "^3.0.0",
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/list": "^6.1.11",
@@ -182,5 +183,11 @@
   },
   "prisma": {
     "schema": "app/database/schema.prisma"
+  },
+  "vercel": {
+    "rewrites": [
+      { "source": "/api/:path*", "destination": "/api/:path*" },
+      { "source": "/(.*)", "destination": "/" }
+    ]
   }
 }

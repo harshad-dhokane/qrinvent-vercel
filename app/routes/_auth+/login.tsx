@@ -42,17 +42,23 @@ export default function IndexLoginForm() {
 
     const formData = new FormData(e.currentTarget);
     const payload = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirectTo: formData.get("redirectTo"),
+      email: formData.get("email")?.toString().toLowerCase(),
+      password: formData.get("password")?.toString(),
+      redirectTo: formData.get("redirectTo")?.toString(),
     };
 
     try {
       const res = await fetch("/api/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
+
+      const data = await res.json();
 
       // Handle OTP redirect
       if (res.status === 302) {
@@ -63,7 +69,6 @@ export default function IndexLoginForm() {
         }
       }
 
-      const data = await res.json();
 
       if (data.error) {
         setFormError(data.error);

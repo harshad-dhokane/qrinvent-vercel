@@ -5,6 +5,13 @@
   "installCommand": "npm install",
   "framework": "remix",
   "regions": ["iad1"],
+  "builds": [
+    { "src": "api/**/*.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/" }
+  ],
   "env": {
     "NODE_ENV": "production"
   }
