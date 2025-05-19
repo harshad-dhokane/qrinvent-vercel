@@ -147,6 +147,7 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/ua-parser-js": "^0.7.39",
+    "@vercel/node": "^5.1.16",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^2.1.9",
     "autoprefixer": "^10.4.19",
