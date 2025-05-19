@@ -35,13 +35,8 @@ export const getLoadContext: HonoServerOptions["getLoadContext"] = (
   const session = getSession<SessionData, FlashData>(c);
 
   return {
-    // Nice to have if you want to display the app version or do something in the app when deploying a new version
-    // Exemple: on navigate, check if the app version is the same as the one in the build assets and if not, display a toast to the user to refresh the page
-    // Prevent the user to use an old version of the client side code (it is only downloaded on document request)
     appVersion: mode === "production" ? build.assets.version : "dev",
     isAuthenticated: session.has(authSessionKey),
-    // we could ensure that session.get() match a specific shape
-    // let's trust our system for now
     getSession: () => {
       const auth = session.get(authSessionKey);
 
@@ -57,9 +52,8 @@ export const getLoadContext: HonoServerOptions["getLoadContext"] = (
 
       return auth;
     },
-    setSession: async (auth: any) => {
+    setSession: async (auth: SessionData["auth"]) => {
       session.set(authSessionKey, auth);
-      // When setting session, also commit it to ensure the cookie is set
       await session.commit();
     },
     destroySession: () => {
@@ -191,7 +185,7 @@ declare module "@remix-run/node" {
      *
      * @param session - The auth session to commit
      */
-    setSession(session: SessionData["auth"]): void;
+    setSession(session: SessionData["auth"]): Promise<void>;
     /**
      * Destroy the session from the session storage middleware
      *

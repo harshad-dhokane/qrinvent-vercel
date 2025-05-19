@@ -79,30 +79,34 @@ export async function action({ context, request }: ActionFunctionArgs) {
         if (!authSession) {
           return redirect(`/otp?email=${encodeURIComponent(email)}&mode=login`);
         }
+        
         const { userId } = authSession;
 
-        /**
-         * The only reason we need to do this is because of the initial login
-         * Theoretically, the user should always have a selected organization cookie as soon as they login for the first time
-         * However we do this check to make sure they are still part of that organization
-         */
-        const { organizationId } = await getSelectedOrganisation({
-          userId,
-          request,
-        });
+        try {
+          // Get organization ID
+          const { organizationId } = await getSelectedOrganisation({
+            userId,
+            request,
+          });
 
-        // Set the auth session and redirect to the assets page
-        // Set the auth session
-        await context.setSession(authSession);
-        
-        // Get organization cookie
-        const orgCookie = await setSelectedOrganizationIdCookie(organizationId);
+          // Set the auth session - now properly typed as a Promise
+          await context.setSession(authSession);
+          
+          // Get organization cookie
+          const orgCookie = await setSelectedOrganizationIdCookie(organizationId);
 
-        return redirect(safeRedirect(redirectTo || "/assets"), {
-          headers: [
-            setCookie(orgCookie)
-          ],
-        });
+          return redirect(safeRedirect(redirectTo || "/assets"), {
+            headers: [
+              setCookie(orgCookie)
+            ],
+          });
+        } catch (error) {
+          throw new ShelfError({
+            cause: error,
+            message: "Failed to set user session. Please try again.",
+            label: "Auth",
+          });
+        }
       }
     }
 
@@ -111,8 +115,8 @@ export async function action({ context, request }: ActionFunctionArgs) {
     const reason = makeShelfError(
       cause,
       undefined,
-      isLikeShelfError(cause)
-        ? cause.shouldBeCaptured
+      isLikeShelfError(cause) 
+        ? cause.shouldBeCaptured 
         : !isZodValidationError(cause)
     );
     return json(error(reason), { status: reason.status });
