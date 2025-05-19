@@ -1,0 +1,46 @@
+node_modules
+
+/build
+/public/build
+.env
+.env.local
+.env.staging
+.env.production
+.env.staging
+set-production-secrets.sh
+set-staging-secrets.sh
+.cache
+
+tsconfig.tsbuildinfo
+
+/prisma/data.db
+/prisma/data.db-journal
+
+
+/coverage
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
+**/supabase/.env
+/sso/metadata-files
+
+# OS
+.DS_Store
+test-results/
+
+/playwright-report/
+/playwright/.cache/
+/playwright-report/*
+desktop-app/shelf-installer
+desktop-app/portable
+/test/lab_equipment_2000.csv
+
+.npmrc
+
+.vscode
+
+# Sentry Config File
+.sentryclirc
+
+.cert
